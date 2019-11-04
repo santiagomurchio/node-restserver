@@ -39,36 +39,12 @@ app.post('/usuario/:id', function(req, res) {
     }
 });
 
-
-// mocks for moove it
-app.post('/dev/b2b-gateway/offers/redeem', function(req, res) {
-    res.json(req.body);
+app.delete('/usuario/:id', function(req, res) {
+    let id = req.params.id;
+    res.json(id);
 });
-app.post('/dev/b2b-gateway/offers/offerdetail', function(req, res) {
-    res.json(req.body);
-});
-app.post('/dev/b2b-gateway/offers/void', function(req, res) {
-    res.json(req.body);
-});
-app.post('/dev/b2b-gateway/offers/retrieveOfferWallet', function(req, res) {
-    res.json(req.body);
-});
-app.get('/dev/setup', function(req, res) {
-    res.json({
-        step: "setup",
-        status: "success"
-    });
-});
-app.get('/dev/teardown', function(req, res) {
-    res.json({
-        step: "teardown",
-        status: "success"
-    });
-});
-
-
 
 
 app.listen(process.env.PORT, () => {
     console.log(`Escuchando el puerto ${process.env.PORT}...`);
-})
+});
