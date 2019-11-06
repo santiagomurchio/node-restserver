@@ -2,10 +2,10 @@ const express = require('express');
 const Usuario = require('../models/usuario');
 const bcrypt = require('bcrypt');
 const _ = require('underscore')
-
+const { verificaToken, verificaAdminRole } = require('../middlewares/autenticacion')
 const app = express();
 
-app.get('/usuario', function(req, res) {
+app.get('/usuario', verificaToken, (req, res) => {
     let desde = Number(req.query.desde || 0);
     let limite = Number(req.query.limite || 5);
 
@@ -31,16 +31,9 @@ app.get('/usuario', function(req, res) {
             }
         });
 
-
-    // res.json({
-    //     nombre: 'Santiago',
-    //     apellido: 'Murchio',
-    //     dni: '30487739',
-    //     email: 'santiagomurchio@gmmail.com'
-    // })
 });
 
-app.put('/usuario/:id', function(req, res) {
+app.put('/usuario/:id', [verificaToken, verificaAdminRole], function(req, res) {
     let id = req.params.id;
     let body = _.pick(req.body, ['nombre', 'email', 'img', 'role', 'estado']);
 
@@ -63,7 +56,7 @@ app.put('/usuario/:id', function(req, res) {
     });
 });
 
-app.post('/usuario/', function(req, res) {
+app.post('/usuario/', [verificaToken, verificaAdminRole], function(req, res) {
     let id = req.params.id;
     let body = req.body;
 
@@ -86,18 +79,9 @@ app.post('/usuario/', function(req, res) {
         }
     });
 
-
-    // if (body.nombre === undefined) {
-    //     res.status(400).json({
-    //         ok: false,
-    //         mensaje: 'El nombre es necesario'
-    //     })
-    // } else {
-    //     res.json(body);
-    // }
 });
 
-app.delete('/usuario/:id', function(req, res) {
+app.delete('/usuario/:id', [verificaToken, verificaAdminRole], function(req, res) {
     let id = req.params.id;
 
     let usuario = {
@@ -127,29 +111,6 @@ app.delete('/usuario/:id', function(req, res) {
         }
     });
 
-
-    // Usuario.findByIdAndRemove(id, (err, usuarioBorrado) => {
-    //     if (err) {
-    //         res.status(400).json({
-    //             ok: false,
-    //             err
-    //         });
-    //     }
-
-    //     if (!usuarioBorrado) {
-    //         res.status(404).json({
-    //             ok: false,
-    //             err: {
-    //                 message: 'Usuario no encontrado'
-    //             }
-    //         });
-    //     }
-
-    //     res.json({
-    //         ok: true,
-    //         usuarioBorrado
-    //     });
-    // });
 });
 
 module.exports = app
